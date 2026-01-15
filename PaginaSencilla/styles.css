@@ -1,0 +1,147 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+}
+
+body {
+  background: white;
+  color: black;
+  line-height: 1.6;
+}
+
+.header {
+  background: black;
+  color: white;
+  text-align: center;
+  padding: 20px 10px;
+  margin-bottom: 20px;
+}
+
+.header h1 {
+  font-size: 2rem;
+  margin: 0;
+}
+
+.container {
+  width: 90%;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 15px;
+}
+
+.productos {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
+  padding: 10px 0;
+}
+
+.card {
+  background: white;
+  border-radius: 8px;
+  padding: 15px;
+  box-shadow: 0 2px 5px lightgray;
+  position: relative;
+}
+
+.imagen-contenedor {
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+  margin-bottom: 10px;
+  background: white;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+.card img {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  display: block;
+  margin: 0 auto;
+}
+
+.card h2 {
+  font-size: 1.1rem;
+  margin: 10px 0 5px;
+}
+
+.card p {
+  color: gray;
+  font-size: 1rem;
+  margin: 5px 0;
+}
+
+.precio {
+  font-weight: bold;
+  color: black;
+  font-size: 1.1rem;
+  margin: 5px 0;
+}
+
+.precio-anterior {
+  text-decoration: line-through;
+  color: gray;
+  font-size: 1rem;
+}
+
+.descuento {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: red;
+  color: white;
+  font-weight: bold;
+  padding: 3px 8px;
+  border-radius: 10px;
+  font-size: 1rem;
+}
+
+.btn-carrito {
+  width: 100%;
+  padding: 8px;
+  margin-top: 10px;
+  background: green;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn-carrito:hover {
+  background: darkgreen;
+}
+
+.whatsapp {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: limegreen;
+  color: white;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  box-shadow: 0 2px 5px gray;
+}
+
+.footer {
+  background: black;
+  color: gray;
+  text-align: center;
+  padding: 15px;
+  margin-top: 30px;
+  font-size: 1rem;
+}
