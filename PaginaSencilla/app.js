@@ -1,161 +1,177 @@
-const WHATSAPP = "5216624791145";
+const NUMERO_WHATSAPP = "5216624791145";
+const CLAVE_STORAGE = "carrito_simple";
 
-const cartBtn = document.getElementById("cartBtn");
-const cartClose = document.getElementById("cartClose");
-const cartEl = document.getElementById("cart");
+const btnAbrirCarrito = document.getElementById("cartBtn");
+const btnCerrarCarrito = document.getElementById("cartClose");
+const panelCarrito = document.getElementById("cart");
 const overlay = document.getElementById("overlay");
 
-const cartCount = document.getElementById("cartCount");
-const cartItems = document.getElementById("cartItems");
-const cartTotal = document.getElementById("cartTotal");
-const cartClear = document.getElementById("cartClear");
-const cartCheckout = document.getElementById("cartCheckout");
+const contadorCarrito = document.getElementById("cartCount");
+const listaCarrito = document.getElementById("cartItems");
+const totalCarrito = document.getElementById("cartTotal");
+const btnVaciar = document.getElementById("cartClear");
+const btnComprar = document.getElementById("cartCheckout");
 
-const waFloat = document.getElementById("waFloat");
-const addBtns = document.querySelectorAll(".add");
-const singleWAs = document.querySelectorAll(".single");
+const btnWhatsappFlotante = document.getElementById("waFloat");
 
-let cart = JSON.parse(localStorage.getItem("cart_simple") || "[]");
+const botonesAgregar = document.querySelectorAll(".add");
+const botonesWhatsappProducto = document.querySelectorAll(".single");
 
-function money(n){
-  return `$${Number(n).toLocaleString("es-MX")} MXN`;
-}
+let carrito = JSON.parse(localStorage.getItem(CLAVE_STORAGE) || "[]");
 
-function waLink(msg){
-  return `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(msg)}`;
-}
+const dinero = (n) => `$${Number(n).toLocaleString("es-MX")} MXN`;
 
-function openCart(){
-  cartEl.classList.add("open");
+const linkWhatsapp = (mensaje) =>
+  `https://wa.me/${NUMERO_WHATSAPP}?text=${encodeURIComponent(mensaje)}`;
+
+const guardar = () =>
+  localStorage.setItem(CLAVE_STORAGE, JSON.stringify(carrito));
+
+const totalCantidad = () =>
+  carrito.reduce((acum, p) => acum + p.cantidad, 0);
+
+const totalPrecio = () =>
+  carrito.reduce((acum, p) => acum + p.cantidad * p.precio, 0);
+
+function abrirCarrito() {
+  panelCarrito.classList.add("open");
   overlay.hidden = false;
 }
 
-function closeCartPanel(){
-  cartEl.classList.remove("open");
+function cerrarCarrito() {
+  panelCarrito.classList.remove("open");
   overlay.hidden = true;
 }
 
-function save(){
-  localStorage.setItem("cart_simple", JSON.stringify(cart));
+// ===== Logica Carrito =====
+function agregarProducto(nombre, precio) {
+  precio = Number(precio);
+
+  const producto = carrito.find(p => p.nombre === nombre);
+
+  if (producto) {
+    producto.cantidad += 1;
+  } else {
+    carrito.push({ nombre, precio, cantidad: 1 });
+  }
+
+  guardar();
+  pintar();
 }
 
-function totalQty(){
-  return cart.reduce((a,i)=>a+i.qty,0);
+function cambiarCantidad(nombre, cambio) {
+  const producto = carrito.find(p => p.nombre === nombre);
+  if (!producto) return;
+
+  producto.cantidad += cambio;
+
+  if (producto.cantidad <= 0) {
+    carrito = carrito.filter(p => p.nombre !== nombre);
+  }
+
+  guardar();
+  pintar();
 }
 
-function totalPrice(){
-  return cart.reduce((a,i)=>a+i.qty*i.price,0);
+function quitarProducto(nombre) {
+  carrito = carrito.filter(p => p.nombre !== nombre);
+  guardar();
+  pintar();
 }
 
-function addItem(name, price){
-  price = Number(price);
-  const found = cart.find(x => x.name === name);
-  if(found) found.qty += 1;
-  else cart.push({name, price, qty:1});
-  save();
-  render();
+function vaciarCarrito() {
+  carrito = [];
+  guardar();
+  pintar();
 }
 
-function inc(name){ change(name, +1); }
-function dec(name){ change(name, -1); }
+function linkCompraCarrito() {
+  if (carrito.length === 0) {
+    return linkWhatsapp("Hola, quiero información sobre sus perfumes.");
+  }
 
-function change(name, delta){
-  const it = cart.find(x => x.name === name);
-  if(!it) return;
-  it.qty += delta;
-  if(it.qty <= 0) cart = cart.filter(x => x.name !== name);
-  save();
-  render();
+  const lista = carrito
+    .map(p => `- ${p.nombre} x${p.cantidad} (${dinero(p.precio)})`)
+    .join("\n");
+
+  const mensaje =
+    `Hola, quiero comprar:\n${lista}\n\n` +
+    `Total: ${dinero(totalPrecio())}\n` +
+    `¿Tienes disponibilidad?`;
+
+  return linkWhatsapp(mensaje);
 }
 
-function removeItem(name){
-  cart = cart.filter(x => x.name !== name);
-  save();
-  render();
-}
+function pintar() {
+  contadorCarrito.textContent = totalCantidad();
+  totalCarrito.textContent = dinero(totalPrecio());
+  btnComprar.href = linkCompraCarrito();
 
-function clearAll(){
-  cart = [];
-  save();
-  render();
-}
+  listaCarrito.innerHTML = "";
 
-function checkoutLink(){
-  if(cart.length === 0) return waLink("Hola, quiero informaciOn sobre sus perfumes");
-
-  const lines = cart.map(i => `- ${i.name} x${i.qty} (${money(i.price)})`).join("\n");
-  const msg = `Hola, quiero comprar:\n${lines}\n\nTotal: ${money(totalPrice())}\n¿Tienes disponibilidad?`;
-  return waLink(msg);
-}
-
-function render(){
-  cartCount.textContent = totalQty();
-  cartTotal.textContent = money(totalPrice());
-  cartCheckout.href = checkoutLink();
-
-  cartItems.innerHTML = "";
-
-  if(cart.length === 0){
-    cartItems.innerHTML = `<p style="color:#777;">Tu carrito esta vacio</p>`;
+  if (carrito.length === 0) {
+    listaCarrito.innerHTML = `<p style="color:#777;">Tu carrito está vacío</p>`;
     return;
   }
 
-  cart.forEach(i => {
-    const div = document.createElement("div");
-    div.className = "item";
-    div.innerHTML = `
+  carrito.forEach(p => {
+    const item = document.createElement("div");
+    item.className = "item";
+    item.innerHTML = `
       <div class="item-top">
-        <span>${i.name}</span>
-        <span>${money(i.price)}</span>
+        <span>${p.nombre}</span>
+        <span>${dinero(p.precio)}</span>
       </div>
+
       <div class="item-bottom">
         <div class="qty">
-          <button data-a="dec" data-n="${i.name}">-</button>
-          <strong>${i.qty}</strong>
-          <button data-a="inc" data-n="${i.name}">+</button>
+          <button data-accion="menos" data-nombre="${p.nombre}">-</button>
+          <strong>${p.cantidad}</strong>
+          <button data-accion="mas" data-nombre="${p.nombre}">+</button>
         </div>
-        <button class="remove" data-a="rm" data-n="${i.name}">Quitar</button>
+        <button class="remove" data-accion="quitar" data-nombre="${p.nombre}">
+          Quitar
+        </button>
       </div>
     `;
-    cartItems.appendChild(div);
+    listaCarrito.appendChild(item);
   });
 }
 
-// WhatsApp flotante
-waFloat.href = waLink("Hola, quiero informacion sobre sus perfumes");
+// ===== Config WhatsApp =====
+btnWhatsappFlotante.href = linkWhatsapp("Hola, quiero información sobre sus perfumes.");
 
-// WhatsApp por producto
-singleWAs.forEach(a => {
-  const name = a.dataset.name;
-  const price = a.dataset.price;
-  a.href = waLink(`Hola, me interesa ${name} en ${money(price)}. ¿Tienes disponibilidad?`);
+botonesWhatsappProducto.forEach(a => {
+  const nombre = a.dataset.name;
+  const precio = a.dataset.price;
+  a.href = linkWhatsapp(`Hola, me interesa ${nombre} en ${dinero(precio)}. ¿Tienes disponibilidad?`);
 });
 
-// Eventos
-cartBtn.addEventListener("click", openCart);
-cartClose.addEventListener("click", closeCartPanel);
-overlay.addEventListener("click", closeCartPanel);
+// ===== Eventos =====
+btnAbrirCarrito.addEventListener("click", abrirCarrito);
+btnCerrarCarrito.addEventListener("click", cerrarCarrito);
+overlay.addEventListener("click", cerrarCarrito);
 
-cartClear.addEventListener("click", clearAll);
+btnVaciar.addEventListener("click", vaciarCarrito);
 
-addBtns.forEach(b => {
-  b.addEventListener("click", () => {
-    addItem(b.dataset.name, b.dataset.price);
-    openCart();
+botonesAgregar.forEach(boton => {
+  boton.addEventListener("click", () => {
+    agregarProducto(boton.dataset.name, boton.dataset.price);
+    abrirCarrito();
   });
 });
 
-cartItems.addEventListener("click", (e) => {
-  const t = e.target;
-  if(!(t instanceof HTMLElement)) return;
+listaCarrito.addEventListener("click", (e) => {
+  const el = e.target;
+  if (!(el instanceof HTMLElement)) return;
 
-  const a = t.dataset.a;
-  const n = t.dataset.n;
-  if(!a || !n) return;
+  const accion = el.dataset.accion;
+  const nombre = el.dataset.nombre;
+  if (!accion || !nombre) return;
 
-  if(a === "inc") inc(n);
-  if(a === "dec") dec(n);
-  if(a === "rm") removeItem(n);
+  if (accion === "mas") cambiarCantidad(nombre, +1);
+  if (accion === "menos") cambiarCantidad(nombre, -1);
+  if (accion === "quitar") quitarProducto(nombre);
 });
 
-render();
+pintar();
