@@ -1,75 +1,114 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es-MX">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Perfumes</title>
-  <link rel="stylesheet" href="styles.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tienda de Perfumes</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
   <header class="top">
-    <h1>Perfumes</h1>
+    <h1>Tienda de Perfumes</h1>
 
-    <button class="cart-btn" id="cartBtn">
+    <button class="cart-btn" id="cartBtn" aria-label="Abrir carrito">
       🛒 <span id="cartCount">0</span>
     </button>
   </header>
 
   <main class="wrap">
-    <h2>Catálogo</h2>
+    <h2>Catálogo de perfumes</h2>
 
     <section class="grid">
 
+      <!-- Producto 1 -->
       <article class="card">
         <span class="off">-20%</span>
-        <img src="img/VersaceEros.jpg" alt="Versace Eros">
-        <h3>Versace Eros</h3>
-        <p>Fresco y seductor.</p>
+        <img src="img/VersaceEros.jpg" alt="Perfume Versace Eros">
+        <h3>Versace Eros EDT</h3>
+        <p>Fragancia fresca y seductora.</p>
 
         <p class="old">$1,800 MXN</p>
         <p class="price">$1,450 MXN</p>
 
-        <button class="add" data-name="Versace Eros" data-price="1450">Agregar</button>
-        <a class="wa single" href="#" data-name="Versace Eros" data-price="1450" target="_blank">WhatsApp</a>
+        <button class="add"
+                data-name="Versace Eros EDT"
+                data-price="1450">
+          Agregar al carrito
+        </button>
+
+        <a class="wa single"
+           href="#"
+           data-name="Versace Eros EDT"
+           data-price="1450"
+           target="_blank"
+           rel="noopener noreferrer">
+          Comprar por WhatsApp
+        </a>
       </article>
 
       <article class="card">
         <span class="off">-25%</span>
-        <img src="img/LattafaAsad.jpg" alt="Lattafa Asad">
-        <h3>Lattafa Asad</h3>
+        <img src="img/LattafaAsad.jpg" alt="Perfume Lattafa Asad Elixir">
+        <h3>Lattafa Asad Elixir</h3>
         <p>Dulce y elegante.</p>
 
         <p class="old">$1,000 MXN</p>
         <p class="price">$750 MXN</p>
 
-        <button class="add" data-name="Lattafa Asad" data-price="750">Agregar</button>
-        <a class="wa single" href="#" data-name="Lattafa Asad" data-price="750" target="_blank">WhatsApp</a>
+        <button class="add"
+                data-name="Lattafa Asad Elixir"
+                data-price="750">
+          Agregar al carrito
+        </button>
+
+        <a class="wa single"
+           href="#"
+           data-name="Lattafa Asad Elixir"
+           data-price="750"
+           target="_blank"
+           rel="noopener noreferrer">
+          Comprar por WhatsApp
+        </a>
       </article>
 
+      <!-- Producto 3 -->
       <article class="card">
         <span class="off">-15%</span>
-        <img src="img/ValentinoIntense.jpg" alt="Valentino Uomo">
-        <h3>Valentino Uomo</h3>
-        <p>Notas intensas.</p>
+        <img src="img/ValentinoIntense.jpg" alt="Perfume Valentino Uomo Intense">
+        <h3>Valentino Uomo Intense</h3>
+        <p>Notas intensas y elegantes.</p>
 
         <p class="old">$2,250 MXN</p>
         <p class="price">$1,900 MXN</p>
 
-        <button class="add" data-name="Valentino Uomo" data-price="1900">Agregar</button>
-        <a class="wa single" href="#" data-name="Valentino Uomo" data-price="1900" target="_blank">WhatsApp</a>
+        <button class="add"
+                data-name="Valentino Uomo Intense"
+                data-price="1900">
+          Agregar al carrito
+        </button>
+
+        <a class="wa single"
+           href="#"
+           data-name="Valentino Uomo Intense"
+           data-price="1900"
+           target="_blank"
+           rel="noopener noreferrer">
+          Comprar por WhatsApp
+        </a>
       </article>
 
     </section>
   </main>
 
-  <!-- Panel carrito -->
+  <!-- Fondo oscuro del carrito -->
   <div class="overlay" id="overlay" hidden></div>
 
-  <aside class="cart" id="cart">
+  <!-- Carrito -->
+  <aside class="cart" id="cart" aria-label="Carrito de compras">
     <div class="cart-top">
-      <strong>Carrito</strong>
-      <button class="close" id="cartClose">✕</button>
+      <strong>Carrito de compras</strong>
+      <button class="close" id="cartClose" aria-label="Cerrar carrito">✕</button>
     </div>
 
     <div id="cartItems" class="cart-items"></div>
@@ -81,14 +120,26 @@
       </div>
 
       <div class="actions">
-        <button id="cartClear" class="clear">Vaciar</button>
-        <a id="cartCheckout" class="checkout" target="_blank">WhatsApp</a>
+        <button id="cartClear" class="clear">Vaciar carrito</button>
+        <a id="cartCheckout"
+           class="checkout"
+           target="_blank"
+           rel="noopener noreferrer">
+          Comprar por WhatsApp
+        </a>
       </div>
     </div>
   </aside>
 
   <!-- WhatsApp flotante -->
-  <a class="wa-float" id="waFloat" href="#" target="_blank">💬</a>
+  <a class="wa-float"
+     id="waFloat"
+     href="#"
+     target="_blank"
+     rel="noopener noreferrer"
+     aria-label="Contactar por WhatsApp">
+    💬
+  </a>
 
   <script src="app.js"></script>
 </body>
